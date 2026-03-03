@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好友农田时间表 - 预览</title>
+<style>
+  :root {
+    --accent: 16 185 129;
+    --card-bg: 255 255 255;
+    --card-border: 229 231 235;
+    --theme-gradient: linear-gradient(135deg, #10b981, #34d399);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #f3f4f6;
+    color: #374151;
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .card-panel {
+    border-radius: 0.75rem;
+    border: 1px solid rgb(var(--card-border));
+    background: rgb(var(--card-bg));
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .card-panel-header {
+    border-bottom: 1px solid rgb(var(--card-border));
+    background: linear-gradient(to bottom, rgba(249,250,251,0.8), rgba(243,244,246,0.5));
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+  .tab-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 4px;
+  }
+  .tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: #6b7280;
+  }
+  .tab-btn:hover { color: #374151; }
+  .tab-btn.active {
+    background: white;
+    color: #111827;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+  .tab-icon {
+    width: 16px; height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: #f97316;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+    margin-left: 2px;
+  }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .search-box {
+    position: relative;
+  }
+  .search-box .icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 14px;
+  }
+  .search-box input {
+    height: 32px;
+    width: 210px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    padding: 0 12px 0 32px;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .search-box input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96,165,250,0.15);
+  }
+  .search-box input::placeholder { color: #9ca3af; }
+  .sort-select {
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    padding: 0 8px;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+  .stats {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 12px;
+    color: #6b7280;
+  }
+  .stats .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+  .stats .dot-blue { background: #60a5fa; }
+  .stats .dot-orange { background: #f97316; }
+  .stats .dot-green { background: #22c55e; }
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+  table {
+    width: 100%;
+    min-width: 600px;
+    text-align: left;
+    font-size: 14px;
+    border-collapse: collapse;
+  }
+  thead {
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  thead th {
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+  tbody tr {
+    transition: background 0.15s;
+  }
+  tbody tr:hover {
+    background: #f9fafb;
+  }
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .friend-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .friend-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .friend-avatar.blue { background: #eff6ff; color: #3b82f6; }
+  .friend-avatar.green { background: #f0fdf4; color: #22c55e; }
+  .friend-avatar.purple { background: #faf5ff; color: #a855f7; }
+  .friend-avatar.pink { background: #fdf2f8; color: #ec4899; }
+  .friend-avatar.amber { background: #fffbeb; color: #f59e0b; }
+  .friend-name { font-weight: 600; color: #1f2937; }
+  .friend-id { font-size: 11px; color: #9ca3af; }
+  .time-mono { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 12px; color: #6b7280; }
+  .countdown-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+  }
+  .countdown-tag.due {
+    background: #fff7ed;
+    color: #c2410c;
+  }
+  .countdown-tag.waiting {
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .status-tag.due {
+    background: #fff7ed;
+    color: #c2410c;
+  }
+  .status-tag.waiting {
+    background: #f0fdf4;
+    color: #15803d;
+  }
+  .table-footer {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #9ca3af;
+  }
+  .table-footer .info-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .layout {
+    display: flex;
+    gap: 24px;
+  }
+  .main-col { flex: 1; min-width: 0; }
+  .side-col { width: 384px; flex-shrink: 0; }
+  @media (max-width: 1024px) {
+    .layout { flex-direction: column; }
+    .side-col { width: 100%; }
+  }
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 64px 16px;
+    text-align: center;
+    background: #f9fafb;
+    border-radius: 8px;
+  }
+  .empty-state .empty-icon { font-size: 40px; color: #d1d5db; }
+  .empty-state .empty-title { color: #6b7280; font-size: 15px; }
+  .empty-state .empty-desc { color: #9ca3af; font-size: 12px; }
+
+  /* Side bag card placeholder */
+  .bag-card {
+    border-radius: 0.75rem;
+    border: 1px solid rgb(var(--card-border));
+    background: rgb(var(--card-bg));
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .bag-header {
+    border-bottom: 1px solid rgb(var(--card-border));
+    background: linear-gradient(to bottom, rgba(249,250,251,0.8), rgba(243,244,246,0.5));
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+  .title-flex { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 500; }
+  .bag-body { padding: 16px; color: #9ca3af; text-align: center; font-size: 13px; }
+  .highlight { animation: pulse-glow 2s ease-in-out infinite alternate; }
+  @keyframes pulse-glow {
+    from { box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    to { box-shadow: 0 0 12px rgba(16, 185, 129, 0.15); }
+  }
+
+  /* SVG icons inline */
+  .svg-icon { width: 1em; height: 1em; vertical-align: -0.125em; fill: currentColor; }
+</style>
+</head>
+<body>
+
+<h1 style="font-size:20px;margin-bottom:20px;color:#111827;">
+  <span style="display:inline-flex;align-items:center;gap:8px;">
+    <svg width="20" height="20" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" fill="#10b981"/><text x="16" y="21" text-anchor="middle" fill="white" font-size="16" font-weight="bold">🌾</text></svg>
+    首页 - 好友农田时间表预览
+  </span>
+</h1>
+
+<div class="layout">
+  <!-- Main Column -->
+  <div class="main-col">
+    <div class="card-panel highlight" id="mainCard">
+      <div class="card-panel-header">
+        <div class="tab-group">
+          <button class="tab-btn" id="tabMine" onclick="switchTab('mine')">
+            🌱 我的农场
+          </button>
+          <button class="tab-btn active" id="tabFriends" onclick="switchTab('friends')">
+            👥 好友农田
+            <span class="badge-count" id="dueBadge">3</span>
+          </button>
+        </div>
+        <button id="refreshBtn" style="display:none;padding:4px 12px;border-radius:6px;border:1px solid #bbf7d0;background:#f0fdf4;color:#16a34a;font-size:13px;cursor:pointer;">
+          🔄 刷新
+        </button>
+      </div>
+
+      <!-- 我的农场 (hidden by default in this preview) -->
+      <div id="panelMine" style="display:none;padding:16px;">
+        <div class="empty-state">
+          <div class="empty-icon">🌾</div>
+          <div class="empty-title">我的农场面板（已有功能）</div>
+          <div class="empty-desc">此预览聚焦于好友农田时间表</div>
+        </div>
+      </div>
+
+      <!-- 好友农田时间表 -->
+      <div id="panelFriends" style="padding:16px;">
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <div class="search-box">
+              <span class="icon">🔍</span>
+              <input type="text" id="searchInput" placeholder="搜索好友名称或ID..." oninput="filterTable()">
+            </div>
+            <select class="sort-select" id="sortSelect" onchange="sortTable()">
+              <option value="remain">按成熟时间</option>
+              <option value="name">按名称排序</option>
+              <option value="status">按状态排序</option>
+            </select>
+          </div>
+          <div class="stats">
+            <span><span class="dot dot-blue"></span>总计 <strong id="statTotal">12</strong></span>
+            <span><span class="dot dot-orange"></span>已成熟 <strong id="statDue">3</strong></span>
+            <span><span class="dot dot-green"></span>成长中 <strong id="statWaiting">9</strong></span>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>好友</th>
+                <th>预计成熟时间</th>
+                <th>倒计时</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody"></tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <span id="footerCount">共 12 位好友</span>
+          <span class="info-icon">ℹ️ 数据通过巡田自动更新</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side Column -->
+  <div class="side-col">
+    <div class="bag-card">
+      <div class="bag-header">
+        <div class="title-flex">📦 我的背包</div>
+        <button style="padding:4px 12px;border-radius:6px;border:1px solid #bbf7d0;background:#f0fdf4;color:#16a34a;font-size:13px;cursor:pointer;">
+          🔄 刷新
+        </button>
+      </div>
+      <div class="bag-body">
+        <p style="padding:40px 0;">背包内容区域（已有功能）</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const avatarColors = ['blue', 'green', 'purple', 'pink', 'amber'];
+
+const mockData = [
+  { gid: 10001, friendName: '小明', nextVisitAt: Date.now() - 120000, remainSec: 0, status: 'due' },
+  { gid: 10002, friendName: '阿花', nextVisitAt: Date.now() - 60000, remainSec: 0, status: 'due' },
+  { gid: 10003, friendName: '大壮', nextVisitAt: Date.now() - 30000, remainSec: 0, status: 'due' },
+  { gid: 10004, friendName: '小红', nextVisitAt: Date.now() + 180000, remainSec: 180, status: 'waiting' },
+  { gid: 10005, friendName: '老王', nextVisitAt: Date.now() + 420000, remainSec: 420, status: 'waiting' },
+  { gid: 10006, friendName: '小李', nextVisitAt: Date.now() + 900000, remainSec: 900, status: 'waiting' },
+  { gid: 10007, friendName: '张三', nextVisitAt: Date.now() + 1500000, remainSec: 1500, status: 'waiting' },
+  { gid: 10008, friendName: '李四', nextVisitAt: Date.now() + 2100000, remainSec: 2100, status: 'waiting' },
+  { gid: 10009, friendName: '王五', nextVisitAt: Date.now() + 2700000, remainSec: 2700, status: 'waiting' },
+  { gid: 10010, friendName: '赵六', nextVisitAt: Date.now() + 3300000, remainSec: 3300, status: 'waiting' },
+  { gid: 10011, friendName: '孙七', nextVisitAt: Date.now() + 3600000, remainSec: 3600, status: 'waiting' },
+  { gid: 10012, friendName: '周八', nextVisitAt: Date.now() + 3900000, remainSec: 3900, status: 'waiting' },
+];
+
+let currentData = [...mockData];
+
+function formatTime(ts) {
+  if (!ts) return '-';
+  const d = new Date(ts);
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function formatRemain(sec) {
+  if (sec <= 0) return '已到期';
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  const pad = n => String(n).padStart(2, '0');
+  if (h > 0) return `${h}:${pad(m)}:${pad(s)}`;
+  return `${pad(m)}:${pad(s)}`;
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('scheduleBody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:48px;color:#9ca3af;">未找到匹配的好友</td></tr>';
+    document.getElementById('footerCount').textContent = '共 0 位好友';
+    return;
+  }
+  tbody.innerHTML = data.map((f, i) => {
+    const color = avatarColors[i % avatarColors.length];
+    const initial = f.friendName.charAt(0);
+    return `<tr>
+      <td>
+        <div class="friend-cell">
+          <div class="friend-avatar ${color}">${initial}</div>
+          <div>
+            <div class="friend-name">${f.friendName}</div>
+            <div class="friend-id">ID: ${f.gid}</div>
+          </div>
+        </div>
+      </td>
+      <td class="time-mono">${formatTime(f.nextVisitAt)}</td>
+      <td>
+        <span class="countdown-tag ${f.status}">
+          ${f.status === 'due' ? '✅' : '⏱️'} ${formatRemain(f.remainSec)}
+        </span>
+      </td>
+      <td>
+        <span class="status-tag ${f.status}">
+          ${f.status === 'due' ? '🌾 已成熟' : '🌱 成长中'}
+        </span>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('footerCount').textContent = `共 ${data.length} 位好友`;
+}
+
+function filterTable() {
+  const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+  let filtered = mockData;
+  if (keyword) {
+    filtered = mockData.filter(f =>
+      f.friendName.toLowerCase().includes(keyword) || String(f.gid).includes(keyword)
+    );
+  }
+  currentData = filtered;
+  sortTable();
+}
+
+function sortTable() {
+  const key = document.getElementById('sortSelect').value;
+  const sorted = [...currentData].sort((a, b) => {
+    if (key === 'name') return a.friendName.localeCompare(b.friendName, 'zh');
+    if (key === 'status') {
+      if (a.status !== b.status) return a.status === 'due' ? -1 : 1;
+      return a.remainSec - b.remainSec;
+    }
+    return a.remainSec - b.remainSec;
+  });
+  renderTable(sorted);
+  updateStats();
+}
+
+function updateStats() {
+  const total = currentData.length;
+  const due = currentData.filter(f => f.status === 'due').length;
+  const waiting = total - due;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statDue').textContent = due;
+  document.getElementById('statWaiting').textContent = waiting;
+  const badge = document.getElementById('dueBadge');
+  badge.textContent = due;
+  badge.style.display = due > 0 ? '' : 'none';
+}
+
+function switchTab(tab) {
+  const mine = document.getElementById('panelMine');
+  const friends = document.getElementById('panelFriends');
+  const tabMine = document.getElementById('tabMine');
+  const tabFriends = document.getElementById('tabFriends');
+  const refreshBtn = document.getElementById('refreshBtn');
+  if (tab === 'mine') {
+    mine.style.display = '';
+    friends.style.display = 'none';
+    tabMine.classList.add('active');
+    tabFriends.classList.remove('active');
+    refreshBtn.style.display = '';
+  } else {
+    mine.style.display = 'none';
+    friends.style.display = '';
+    tabMine.classList.remove('active');
+    tabFriends.classList.add('active');
+    refreshBtn.style.display = 'none';
+  }
+}
+
+// Countdown timer
+setInterval(() => {
+  mockData.forEach(f => {
+    if (f.remainSec > 0) {
+      f.remainSec--;
+      if (f.remainSec <= 0) f.status = 'due';
+    }
+  });
+  filterTable();
+}, 1000);
+
+// Initial render
+filterTable();
+updateStats();
+</script>
+
+</body>
+</html>

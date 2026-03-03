@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好友访问日志 - 预览</title>
+<style>
+  :root {
+    --color-accent: 16 185 129;
+    --card-bg: 255 255 255;
+    --card-border: 229 231 235;
+    --main-bg: 248 250 252;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+    background: rgb(var(--main-bg));
+    color: #1f2937;
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .card-panel {
+    border-radius: 0.75rem;
+    border: 1px solid rgb(var(--card-border));
+    background-color: rgb(var(--card-bg));
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    padding: 24px;
+  }
+  .tab-bar {
+    display: inline-flex;
+    gap: 4px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 16px;
+  }
+  .tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: #6b7280;
+  }
+  .tab-btn:hover { color: #374151; }
+  .tab-btn.active {
+    background: #fff;
+    color: #111827;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .tab-btn svg { width: 16px; height: 16px; }
+
+  .log-table-wrap {
+    max-height: 420px;
+    min-height: 200px;
+    overflow-y: auto;
+    border-radius: 6px;
+    background: #f9fafb;
+  }
+  table {
+    width: 100%;
+    min-width: 640px;
+    text-align: left;
+    font-size: 14px;
+    border-collapse: collapse;
+  }
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  thead th {
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+  tbody tr {
+    transition: background 0.15s;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  tbody tr:hover { background: #f3f4f6; }
+  tbody td { padding: 10px 16px; }
+  td.time-col {
+    white-space: nowrap;
+    color: #6b7280;
+    font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+  .friend-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .friend-name svg { color: #9ca3af; width: 16px; height: 16px; }
+  .friend-name span { font-weight: 500; color: #374151; }
+
+  .action-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .action-tag svg { width: 14px; height: 14px; }
+  .action-tag.water { background: #dbeafe; color: #1d4ed8; }
+  .action-tag.weed  { background: #fef3c7; color: #a16207; }
+  .action-tag.bug   { background: #fee2e2; color: #b91c1c; }
+  .action-tag.steal { background: #ffedd5; color: #c2410c; }
+
+  .steal-delay {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #fff7ed;
+    color: #ea580c;
+  }
+  .steal-delay svg { width: 12px; height: 12px; }
+  .muted { color: #d1d5db; }
+  .crop-col { color: #4b5563; }
+
+  .runtime-panel {
+    display: none;
+    max-height: 420px;
+    min-height: 200px;
+    overflow-y: auto;
+    border-radius: 6px;
+    background: #f9fafb;
+    padding: 16px;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .runtime-panel.active { display: block; }
+  .log-table-wrap.active { display: block; }
+  .log-table-wrap { display: none; }
+  .log-time { color: #9ca3af; margin-right: 8px; user-select: none; }
+  .log-tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  .log-tag.harvest { background: #dcfce7; color: #15803d; }
+  .log-tag.system  { background: #dbeafe; color: #1d4ed8; }
+  .log-tag.warn    { background: #ffedd5; color: #c2410c; }
+  .log-msg { color: #374151; }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .title-hint {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-left: 12px;
+    font-weight: 400;
+  }
+</style>
+</head>
+<body>
+
+<div class="card-panel">
+  <div class="header-row">
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-runtime" onclick="switchTab('runtime')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M25.7 9.3l-7-7A.908.908 0 0 0 18 2H8a2.006 2.006 0 0 0-2 2v24a2.006 2.006 0 0 0 2 2h16a2.006 2.006 0 0 0 2-2V10a.908.908 0 0 0-.3-.7zM18 4.4l5.6 5.6H18zM24 28H8V4h8v6a2.006 2.006 0 0 0 2 2h6z"/></svg>
+        运行日志
+      </button>
+      <button class="tab-btn" id="tab-friend" onclick="switchTab('friend')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M30 30h-2v-5a5.006 5.006 0 0 0-5-5v-2a7.008 7.008 0 0 1 7 7zM22 4a5 5 0 0 0 0 10h.075A5 5 0 0 0 22 4zm0 8a3 3 0 1 1 .075-6A3 3 0 0 1 22 12zm-8 6a5 5 0 1 0-5-5a5.006 5.006 0 0 0 5 5zm0-8a3 3 0 1 1-3 3a3.003 3.003 0 0 1 3-3zm-8 20h-2v-5a5.006 5.006 0 0 1 5-5h6a5.006 5.006 0 0 1 5 5v5h-2v-5a3.003 3.003 0 0 0-3-3h-6a3.003 3.003 0 0 0-3 3z"/></svg>
+        好友访问日志
+      </button>
+    </div>
+    <span class="title-hint" id="hint-text">显示所有运行日志</span>
+  </div>
+
+  <!-- Runtime Logs -->
+  <div class="runtime-panel active" id="panel-runtime">
+    <div>
+      <span class="log-time">[08:12:33]</span>
+      <span class="log-tag harvest">收获</span>
+      <span class="log-msg">收获了 白萝卜 x3，获得经验 +45</span>
+    </div>
+    <div>
+      <span class="log-time">[08:15:07]</span>
+      <span class="log-tag system">系统</span>
+      <span class="log-msg">好友巡查开始，共 12 位好友</span>
+    </div>
+    <div>
+      <span class="log-time">[08:15:12]</span>
+      <span class="log-tag harvest">收获</span>
+      <span class="log-msg">在好友 小明 的农场偷取了 胡萝卜 x1</span>
+    </div>
+    <div>
+      <span class="log-time">[09:02:41]</span>
+      <span class="log-tag warn">警告</span>
+      <span class="log-msg">好友 大壮 偷取了你的 番茄，成熟后 127 秒被偷</span>
+    </div>
+    <div>
+      <span class="log-time">[09:30:00]</span>
+      <span class="log-tag harvest">收获</span>
+      <span class="log-msg">自动种植了 玉米 到 3号地块</span>
+    </div>
+    <div>
+      <span class="log-time">[10:05:58]</span>
+      <span class="log-tag warn">警告</span>
+      <span class="log-msg">好友 老王 偷取了你的 草莓，成熟后 42 秒被偷</span>
+    </div>
+    <div>
+      <span class="log-time">[10:22:03]</span>
+      <span class="log-tag system">系统</span>
+      <span class="log-msg">农场巡查完成，下次巡查 300 秒后</span>
+    </div>
+  </div>
+
+  <!-- Friend Visit Logs Table -->
+  <div class="log-table-wrap" id="panel-friend">
+    <table>
+      <thead>
+        <tr>
+          <th>时间</th>
+          <th>好友</th>
+          <th>操作</th>
+          <th>作物</th>
+          <th>偷取延迟</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="time-col">08:12:33</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>小明</span>
+            </div>
+          </td>
+          <td><span class="action-tag water">💧 浇水</span></td>
+          <td class="crop-col">白萝卜</td>
+          <td><span class="muted">-</span></td>
+        </tr>
+        <tr>
+          <td class="time-col">08:15:07</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>阿花</span>
+            </div>
+          </td>
+          <td><span class="action-tag weed">🌿 除草</span></td>
+          <td class="crop-col">胡萝卜</td>
+          <td><span class="muted">-</span></td>
+        </tr>
+        <tr>
+          <td class="time-col">09:02:41</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>大壮</span>
+            </div>
+          </td>
+          <td><span class="action-tag steal">🏃 偷菜</span></td>
+          <td class="crop-col">番茄</td>
+          <td><span class="steal-delay">⏱ 成熟后 2分7秒</span></td>
+        </tr>
+        <tr>
+          <td class="time-col">09:30:12</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>小红</span>
+            </div>
+          </td>
+          <td><span class="action-tag bug">🐛 除虫</span></td>
+          <td class="crop-col">玉米</td>
+          <td><span class="muted">-</span></td>
+        </tr>
+        <tr>
+          <td class="time-col">10:05:58</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>老王</span>
+            </div>
+          </td>
+          <td><span class="action-tag steal">🏃 偷菜</span></td>
+          <td class="crop-col">草莓</td>
+          <td><span class="steal-delay">⏱ 成熟后 42秒</span></td>
+        </tr>
+        <tr>
+          <td class="time-col">10:22:03</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>小李</span>
+            </div>
+          </td>
+          <td><span class="action-tag water">💧 浇水</span></td>
+          <td class="crop-col">西瓜</td>
+          <td><span class="muted">-</span></td>
+        </tr>
+        <tr>
+          <td class="time-col">11:01:29</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>大壮</span>
+            </div>
+          </td>
+          <td><span class="action-tag steal">🏃 偷菜</span></td>
+          <td class="crop-col">白萝卜</td>
+          <td><span class="steal-delay">⏱ 成熟后 5分5秒</span></td>
+        </tr>
+        <tr>
+          <td class="time-col">11:45:16</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>阿花</span>
+            </div>
+          </td>
+          <td><span class="action-tag water">💧 浇水</span></td>
+          <td class="crop-col">辣椒</td>
+          <td><span class="muted">-</span></td>
+        </tr>
+        <tr>
+          <td class="time-col">12:10:44</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>小明</span>
+            </div>
+          </td>
+          <td><span class="action-tag steal">🏃 偷菜</span></td>
+          <td class="crop-col">玉米</td>
+          <td><span class="steal-delay">⏱ 成熟后 8秒</span></td>
+        </tr>
+        <tr>
+          <td class="time-col">13:33:55</td>
+          <td>
+            <div class="friend-name">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7zm10 28h-2v-5a5.006 5.006 0 0 0-5-5h-6a5.006 5.006 0 0 0-5 5v5H6v-5a7.008 7.008 0 0 1 7-7h6a7.008 7.008 0 0 1 7 7z"/></svg>
+              <span>老王</span>
+            </div>
+          </td>
+          <td><span class="action-tag weed">🌿 除草</span></td>
+          <td class="crop-col">番茄</td>
+          <td><span class="muted">-</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function switchTab(tab) {
+  const runtimeBtn = document.getElementById('tab-runtime');
+  const friendBtn = document.getElementById('tab-friend');
+  const runtimePanel = document.getElementById('panel-runtime');
+  const friendPanel = document.getElementById('panel-friend');
+  const hint = document.getElementById('hint-text');
+
+  if (tab === 'runtime') {
+    runtimeBtn.classList.add('active');
+    friendBtn.classList.remove('active');
+    runtimePanel.classList.add('active');
+    friendPanel.classList.remove('active');
+    hint.textContent = '显示所有运行日志';
+  } else {
+    runtimeBtn.classList.remove('active');
+    friendBtn.classList.add('active');
+    runtimePanel.classList.remove('active');
+    friendPanel.classList.add('active');
+    hint.textContent = '记录好友对我的农场的所有访问操作';
+  }
+}
+</script>
+
+</body>
+</html>

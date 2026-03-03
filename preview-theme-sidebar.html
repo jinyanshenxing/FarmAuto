@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>主题切换侧边栏 - 预览</title>
+<style>
+  :root {
+    --color-accent: 16 185 129;
+    --glow-accent: 16 185 129;
+    --card-bg: 255 255 255;
+    --card-border: 229 231 235;
+    --main-bg: 248 250 252;
+    --theme-gradient-from: #10b981;
+    --theme-gradient-to: #34d399;
+    --theme-gradient: linear-gradient(135deg, var(--theme-gradient-from), var(--theme-gradient-to));
+    --theme-card-accent-border: rgba(16, 185, 129, 0.2);
+  }
+  [data-theme="ocean"] {
+    --color-accent: 59 130 246;
+    --theme-gradient-from: #3b82f6;
+    --theme-gradient-to: #06b6d4;
+    --theme-gradient: linear-gradient(135deg, #3b82f6, #06b6d4);
+    --theme-card-accent-border: rgba(59, 130, 246, 0.2);
+  }
+  [data-theme="sunset"] {
+    --color-accent: 249 115 22;
+    --theme-gradient-from: #f97316;
+    --theme-gradient-to: #f43f5e;
+    --theme-gradient: linear-gradient(135deg, #f97316, #f43f5e);
+    --theme-card-accent-border: rgba(249, 115, 22, 0.2);
+  }
+  [data-theme="amethyst"] {
+    --color-accent: 139 92 246;
+    --theme-gradient-from: #8b5cf6;
+    --theme-gradient-to: #a855f7;
+    --theme-gradient: linear-gradient(135deg, #8b5cf6, #a855f7);
+    --theme-card-accent-border: rgba(139, 92, 246, 0.2);
+  }
+  [data-theme="sakura"] {
+    --color-accent: 236 72 153;
+    --theme-gradient-from: #ec4899;
+    --theme-gradient-to: #f472b6;
+    --theme-gradient: linear-gradient(135deg, #ec4899, #f472b6);
+    --theme-card-accent-border: rgba(236, 72, 153, 0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+    background: rgb(var(--main-bg));
+    color: #1f2937;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .demo-layout {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Left Sidebar Mock */
+  .left-sidebar {
+    width: 240px;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .left-sidebar .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .brand-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--theme-gradient);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px;
+    transition: background 0.4s;
+  }
+  .brand-text {
+    font-weight: 700;
+    font-size: 15px;
+    background: var(--theme-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.4s;
+  }
+  .nav-list { padding: 16px 12px; flex: 1; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 10px;
+    color: #6b7280; font-size: 14px;
+    margin-bottom: 2px; cursor: pointer; transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+  .nav-item:hover { background: #f3f4f6; color: rgb(var(--color-accent)); }
+  .nav-item.active {
+    background: rgba(var(--color-accent), 0.08);
+    color: rgb(var(--color-accent));
+    border-left-color: rgb(var(--color-accent));
+    font-weight: 500;
+  }
+  .nav-icon { font-size: 18px; }
+
+  /* Main Content */
+  .main-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    background-image:
+      linear-gradient(rgba(241, 245, 249, 0.4) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(241, 245, 249, 0.4) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .card-panel {
+    border-radius: 12px;
+    border: 1px solid rgb(var(--card-border));
+    background: rgb(var(--card-bg));
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    padding: 16px;
+  }
+  .stat-label { font-size: 12px; color: #6b7280; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .stat-value { font-size: 24px; font-weight: 700; }
+  .stat-value.accent { color: rgb(var(--color-accent)); }
+
+  .progress-bar-bg { height: 6px; border-radius: 3px; background: #f3f4f6; overflow: hidden; margin-top: 8px; }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--theme-gradient);
+    transition: width 0.6s ease, background 0.4s;
+  }
+
+  .section-title {
+    font-size: 16px; font-weight: 600; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-icon { color: rgb(var(--color-accent)); }
+
+  .log-box {
+    border-radius: 6px;
+    background: #f9fafb;
+    padding: 16px;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 2;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .log-time { color: #9ca3af; margin-right: 8px; user-select: none; }
+  .log-tag {
+    display: inline-block; padding: 1px 6px; border-radius: 4px;
+    font-size: 11px; font-weight: 700; margin-right: 8px;
+  }
+  .log-tag.ok { background: rgba(var(--color-accent), 0.12); color: rgb(var(--color-accent)); }
+  .log-tag.sys { background: #dbeafe; color: #1d4ed8; }
+
+  /* Floating Button */
+  .fab {
+    position: fixed; right: 24px; bottom: 24px; z-index: 40;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--theme-gradient);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transition: transform 0.3s, box-shadow 0.3s, background 0.4s;
+    color: #fff; font-size: 22px;
+  }
+  .fab:hover { transform: scale(1.12); box-shadow: 0 6px 24px rgba(0,0,0,0.2); }
+  .fab svg { width: 24px; height: 24px; fill: currentColor; }
+
+  /* Overlay */
+  .overlay {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(4px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+
+  /* Right Sidebar */
+  .theme-sidebar {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 50;
+    width: 320px;
+    background: #fff;
+    border-left: 1px solid var(--theme-card-accent-border);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.08);
+    display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .theme-sidebar.open { transform: translateX(0); }
+
+  .sidebar-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .sidebar-header-left { display: flex; align-items: center; gap: 12px; }
+  .sidebar-header-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--theme-gradient);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px;
+    transition: background 0.4s;
+  }
+  .sidebar-header h3 { font-size: 15px; font-weight: 700; color: #111827; }
+  .sidebar-header p { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+  .close-btn {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: none; background: transparent; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #9ca3af; font-size: 18px;
+    transition: all 0.2s;
+  }
+  .close-btn:hover { background: #f3f4f6; color: #4b5563; }
+
+  .theme-list { flex: 1; overflow-y: auto; padding: 16px; }
+  .theme-list .space-y > * + * { margin-top: 12px; }
+
+  .theme-card {
+    position: relative; overflow: hidden;
+    width: 100%; border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    padding: 16px; text-align: left;
+    cursor: pointer; background: #fff;
+    transition: all 0.25s;
+  }
+  .theme-card:hover { border-color: #d1d5db; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .theme-card.active { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+
+  .gradient-bar {
+    height: 8px; width: 100%; border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .color-dots { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .color-dot { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 1px 3px rgba(0,0,0,0.12); }
+  .check-badge {
+    margin-left: auto; width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 12px; font-weight: 700;
+  }
+  .theme-name { font-size: 14px; font-weight: 700; color: #1f2937; }
+  .theme-desc { font-size: 12px; color: #9ca3af; margin-top: 3px; line-height: 1.6; }
+
+  .active-deco {
+    position: absolute; top: -12px; right: -12px;
+    width: 64px; height: 64px; border-radius: 50%;
+    opacity: 0.1;
+  }
+
+  .sidebar-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #e5e7eb;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: #9ca3af;
+  }
+
+  .countdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .countdown-item { display: flex; align-items: center; justify-content: space-between; }
+  .countdown-label { display: flex; align-items: center; gap: 8px; color: #374151; font-size: 14px; }
+  .countdown-value { font-size: 18px; font-weight: 700; font-family: 'Cascadia Code', monospace; }
+</style>
+</head>
+<body>
+
+<div class="demo-layout">
+  <!-- Left Sidebar -->
+  <div class="left-sidebar">
+    <div class="brand">
+      <div class="brand-icon" id="brandIcon">🌱</div>
+      <div class="brand-text" id="brandText">QQ农场智能助手</div>
+    </div>
+    <div class="nav-list">
+      <div class="nav-item active"><span class="nav-icon">📊</span> 仪表盘</div>
+      <div class="nav-item"><span class="nav-icon">👥</span> 账号管理</div>
+      <div class="nav-item"><span class="nav-icon">📈</span> 数据分析</div>
+      <div class="nav-item"><span class="nav-icon">⚙️</span> 系统设置</div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Status Cards -->
+    <div class="status-grid">
+      <div class="card-panel stat-card">
+        <div class="stat-label">🧑 账号</div>
+        <div class="stat-value">农场达人</div>
+        <div class="stat-label" style="margin-top: 8px;">Lv.42 · EXP 12,800 / 15,000</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 85%;" id="expBar"></div>
+        </div>
+      </div>
+      <div class="card-panel stat-card">
+        <div class="stat-label">💰 金币</div>
+        <div class="stat-value accent" id="goldValue">128,450</div>
+        <div style="font-size: 11px; color: #22c55e; margin-top: 4px;">+3,200 今日</div>
+        <div style="margin-top: 12px; border-top: 1px solid #f3f4f6; padding-top: 8px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block;"></span>
+            <span style="font-size: 12px; font-weight: 600;">在线</span>
+          </div>
+          <span style="font-size: 12px; color: #9ca3af; font-family: monospace;">2h 15m 32s</span>
+        </div>
+      </div>
+      <div class="card-panel stat-card">
+        <div class="stat-label">🧪 化肥容器</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px;">
+          <div><div style="font-size: 11px; color: #9ca3af;">普通</div><div style="font-weight: 700;">12.5h</div></div>
+          <div><div style="font-size: 11px; color: #9ca3af;">有机</div><div style="font-weight: 700;">8.3h</div></div>
+        </div>
+        <div style="margin-top: 8px; border-top: 1px solid #f3f4f6; padding-top: 8px;">
+          <div style="font-size: 11px; color: #9ca3af; margin-bottom: 4px;">⭐ 收藏点</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div><div style="font-size: 11px; color: #9ca3af;">普通</div><div style="font-weight: 700;">156</div></div>
+            <div><div style="font-size: 11px; color: #9ca3af;">典藏</div><div style="font-weight: 700;">23</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two-column: Log + Stats -->
+    <div style="display: flex; gap: 24px;">
+      <div style="flex: 3;">
+        <div class="card-panel" style="padding: 24px;">
+          <div class="section-title">
+            <span class="section-icon">📄</span> 运行日志
+          </div>
+          <div class="log-box">
+            <div><span class="log-time">[08:12:33]</span><span class="log-tag ok">收获</span>收获了 白萝卜 x3，获得经验 +45</div>
+            <div><span class="log-time">[08:15:07]</span><span class="log-tag sys">系统</span>好友巡查开始，共 12 位好友</div>
+            <div><span class="log-time">[09:02:41]</span><span class="log-tag ok">种植</span>自动种植了 番茄 到 3号地块</div>
+            <div><span class="log-time">[10:05:58]</span><span class="log-tag ok">施肥</span>为 2号地块 施加了普通化肥</div>
+            <div><span class="log-time">[10:22:03]</span><span class="log-tag sys">系统</span>农场巡查完成，下次巡查 300 秒后</div>
+          </div>
+        </div>
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 24px;">
+        <div class="card-panel" style="padding: 24px;">
+          <div class="section-title"><span class="section-icon">⏳</span> 下次巡查倒计时</div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="countdown-item">
+              <div class="countdown-label">🌱 农场</div>
+              <div class="countdown-value">04:32</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-label">👥 好友</div>
+              <div class="countdown-value">12:08</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-panel" style="padding: 16px;">
+          <div class="section-title"><span class="section-icon">📊</span> 今日统计</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div style="background: #f9fafb; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; color: #6b7280;">🌾 收获</span>
+              <span style="font-weight: 700; font-size: 14px;">12</span>
+            </div>
+            <div style="background: #f9fafb; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; color: #6b7280;">💧 浇水</span>
+              <span style="font-weight: 700; font-size: 14px;">8</span>
+            </div>
+            <div style="background: #f9fafb; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; color: #6b7280;">🏃 偷菜</span>
+              <span style="font-weight: 700; font-size: 14px;">5</span>
+            </div>
+            <div style="background: #f9fafb; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; color: #6b7280;">🌱 种植</span>
+              <span style="font-weight: 700; font-size: 14px;">6</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Theme Button -->
+<button class="fab" id="fab" onclick="toggleSidebar()">
+  🎨
+</button>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Theme Sidebar -->
+<div class="theme-sidebar" id="themeSidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-header-left">
+      <div class="sidebar-header-icon" id="sidebarIcon">🎨</div>
+      <div>
+        <h3>外观主题</h3>
+        <p>选择你喜欢的配色方案</p>
+      </div>
+    </div>
+    <button class="close-btn" onclick="toggleSidebar()">✕</button>
+  </div>
+  <div class="theme-list">
+    <div class="space-y" id="themeList"></div>
+  </div>
+  <div class="sidebar-footer">
+    ℹ️ <span>主题设置会自动保存到本地</span>
+  </div>
+</div>
+
+<script>
+const themes = [
+  { id: 'default', name: '翡翠森林', desc: '清新自然的绿色调，灵感来自晨光中的翠绿山谷', from: '#10b981', to: '#34d399' },
+  { id: 'ocean',   name: '海洋深邃', desc: '沉稳优雅的蓝青渐变，仿佛置身深海与天空之间', from: '#3b82f6', to: '#06b6d4' },
+  { id: 'sunset',  name: '落日熔金', desc: '温暖热烈的橙红渐变，如同傍晚天边的绚烂霞光', from: '#f97316', to: '#f43f5e' },
+  { id: 'amethyst',name: '紫晶幻梦', desc: '神秘浪漫的紫色光芒，营造出魔法般的梦幻氛围', from: '#8b5cf6', to: '#a855f7' },
+  { id: 'sakura',  name: '樱花绯色', desc: '甜美柔和的粉色系，如同春风中飘落的樱花花瓣', from: '#ec4899', to: '#f472b6' },
+];
+
+let currentTheme = 'default';
+let sidebarOpen = false;
+
+function toggleSidebar() {
+  sidebarOpen = !sidebarOpen;
+  document.getElementById('themeSidebar').classList.toggle('open', sidebarOpen);
+  document.getElementById('overlay').classList.toggle('open', sidebarOpen);
+}
+
+function applyTheme(id) {
+  currentTheme = id;
+  const el = document.documentElement;
+  if (id === 'default') el.removeAttribute('data-theme');
+  else el.setAttribute('data-theme', id);
+  renderThemeList();
+}
+
+function renderThemeList() {
+  const container = document.getElementById('themeList');
+  container.innerHTML = themes.map(t => {
+    const isActive = currentTheme === t.id;
+    const grad = `linear-gradient(90deg, ${t.from}, ${t.to})`;
+    const grad135 = `linear-gradient(135deg, ${t.from}, ${t.to})`;
+    return `
+      <button class="theme-card ${isActive ? 'active' : ''}"
+        style="${isActive ? `border-color: ${t.from}; box-shadow: 0 2px 12px ${t.from}22;` : ''}"
+        onclick="applyTheme('${t.id}')">
+        ${isActive ? `<div class="active-deco" style="background: ${grad135}"></div>` : ''}
+        <div class="gradient-bar" style="background: ${grad}"></div>
+        <div class="color-dots">
+          <div class="color-dot" style="background: ${t.from}"></div>
+          <div class="color-dot" style="background: ${grad135}"></div>
+          <div class="color-dot" style="background: ${t.to}"></div>
+          ${isActive ? `<div class="check-badge" style="background: ${grad135}">✓</div>` : ''}
+        </div>
+        <div class="theme-name" ${isActive ? `style="color: ${t.from}"` : ''}>${t.name}</div>
+        <div class="theme-desc">${t.desc}</div>
+      </button>
+    `;
+  }).join('');
+}
+
+renderThemeList();
+</script>
+
+</body>
+</html>

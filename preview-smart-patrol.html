@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好友智能巡田逻辑 - 预览</title>
+<style>
+  :root { --accent: #10b981; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+    padding: 24px;
+    min-height: 100vh;
+  }
+  h1 { font-size: 22px; margin-bottom: 8px; }
+  .subtitle { font-size: 14px; color: #64748b; margin-bottom: 24px; }
+  .card {
+    border-radius: 12px; background: #fff;
+    border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    font-weight: 700; font-size: 15px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-body { padding: 20px; }
+
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .flow-step {
+    display: flex; gap: 16px; position: relative;
+    padding-bottom: 24px;
+  }
+  .flow-step:last-child { padding-bottom: 0; }
+  .flow-step::before {
+    content: '';
+    position: absolute; left: 19px; top: 40px; bottom: 0;
+    width: 2px; background: #e2e8f0;
+  }
+  .flow-step:last-child::before { display: none; }
+  .flow-icon {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0; z-index: 1;
+  }
+  .flow-icon.green { background: #dcfce7; }
+  .flow-icon.blue { background: #dbeafe; }
+  .flow-icon.orange { background: #ffedd5; }
+  .flow-icon.purple { background: #f3e8ff; }
+  .flow-icon.gray { background: #f1f5f9; }
+  .flow-icon.red { background: #fee2e2; }
+  .flow-content { flex: 1; padding-top: 8px; }
+  .flow-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .flow-desc { font-size: 13px; color: #64748b; line-height: 1.6; }
+  .flow-highlight {
+    display: inline-block; background: #fef3c7; color: #92400e;
+    padding: 1px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;
+    margin-top: 4px;
+  }
+  .flow-new {
+    display: inline-block; background: #dcfce7; color: #166534;
+    padding: 1px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;
+    margin-left: 8px;
+  }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .compare-col h3 {
+    font-size: 14px; font-weight: 700; margin-bottom: 12px;
+    padding: 8px 14px; border-radius: 8px;
+  }
+  .compare-col.old h3 { background: #fee2e2; color: #991b1b; }
+  .compare-col.new h3 { background: #dcfce7; color: #166534; }
+  .compare-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 0; font-size: 13px; line-height: 1.5;
+    border-bottom: 1px solid #f8fafc;
+  }
+  .compare-item:last-child { border-bottom: none; }
+  .ci-icon { font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+
+  .demo-log {
+    background: #f8fafc; border-radius: 8px; padding: 14px;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 13px; line-height: 2;
+    max-height: 300px; overflow-y: auto;
+  }
+  .log-time { color: #94a3b8; margin-right: 6px; }
+  .log-tag {
+    display: inline-block; padding: 1px 6px; border-radius: 4px;
+    font-size: 11px; font-weight: 700; margin-right: 6px;
+  }
+  .log-tag.friend { background: #dbeafe; color: #1e40af; }
+  .log-tag.schedule { background: #fef3c7; color: #92400e; }
+  .log-tag.system { background: #f3e8ff; color: #7c3aed; }
+
+  .schedule-table {
+    width: 100%; text-align: left; font-size: 13px;
+    border-collapse: collapse;
+  }
+  .schedule-table thead { background: #f8fafc; }
+  .schedule-table th {
+    padding: 10px 14px; font-weight: 600; font-size: 12px;
+    color: #64748b; border-bottom: 1px solid #e2e8f0;
+    text-transform: uppercase;
+  }
+  .schedule-table td {
+    padding: 10px 14px; border-bottom: 1px solid #f1f5f9;
+  }
+  .schedule-table tr:hover { background: #f8fafc; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 10px; border-radius: 4px;
+    font-size: 11px; font-weight: 700;
+  }
+  .status-badge.waiting { background: #fef3c7; color: #92400e; }
+  .status-badge.due { background: #dcfce7; color: #166534; }
+  .countdown { font-family: monospace; font-weight: 600; color: #ea580c; }
+  .tag-safe {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 700;
+    background: #dcfce7; color: #166534;
+  }
+</style>
+</head>
+<body>
+
+<h1>好友智能巡田逻辑</h1>
+<p class="subtitle">基于作物成熟时间的按需巡查策略，大幅减少无效 API 请求，降低被检测风险</p>
+
+<!-- Before vs After -->
+<div class="card">
+  <div class="card-header">📊 改造前后对比</div>
+  <div class="card-body">
+    <div class="compare-grid">
+      <div class="compare-col old">
+        <h3>❌ 改造前：全量遍历</h3>
+        <div class="compare-item"><span class="ci-icon">🔄</span><span>每 10 秒触发一次好友巡查周期</span></div>
+        <div class="compare-item"><span class="ci-icon">👥</span><span><b>每次遍历全部好友</b>，逐个进入农场</span></div>
+        <div class="compare-item"><span class="ci-icon">📡</span><span>50 个好友 = 每周期 100+ 次 API 请求（进入 + 离开）</span></div>
+        <div class="compare-item"><span class="ci-icon">⚠️</span><span>大量无效请求（作物未熟也要进入查看）</span></div>
+        <div class="compare-item"><span class="ci-icon">🚨</span><span>高频访问容易触发官方风控检测</span></div>
+      </div>
+      <div class="compare-col new">
+        <h3>✅ 改造后：智能调度</h3>
+        <div class="compare-item"><span class="ci-icon">🧠</span><span>首次访问后记录每个好友的<b>最早成熟时间</b></span></div>
+        <div class="compare-item"><span class="ci-icon">⏰</span><span>作物未熟的好友<b>自动跳过</b>，到期才访问</span></div>
+        <div class="compare-item"><span class="ci-icon">📉</span><span>API 请求量降低 70%~90%</span></div>
+        <div class="compare-item"><span class="ci-icon">🎯</span><span>有可偷/可帮好友仍<b>立即访问</b>（优先级不变）</span></div>
+        <div class="compare-item"><span class="ci-icon">🛡️</span><span>访问模式更像真人操作，有效规避检测</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Flow Chart -->
+<div class="card">
+  <div class="card-header">🔄 新巡查流程</div>
+  <div class="card-body">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-icon blue">📋</div>
+        <div class="flow-content">
+          <div class="flow-title">1. 拉取好友列表</div>
+          <div class="flow-desc">调用 <code>getAllFriends()</code>（单次 API），获取所有好友的摘要信息（可偷数量、缺水/有虫等状态）</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon green">⭐</div>
+        <div class="flow-content">
+          <div class="flow-title">2. 优先好友：有可操作内容 → 立即访问</div>
+          <div class="flow-desc">好友列表显示 stealNum &gt; 0 或有缺水/虫草 → 放入<b>优先队列</b>并清除旧调度，确保第一时间访问</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon orange">⏳</div>
+        <div class="flow-content">
+          <div class="flow-title">3. 普通好友：检查调度表 <span class="flow-new">NEW</span></div>
+          <div class="flow-desc">
+            查询 <code>friendNextVisitMap</code>：<br>
+            • 有调度且<b>未到期</b> → <b>跳过本轮</b>（作物还没熟）<br>
+            • 调度<b>已到期</b>或<b>首次访问</b> → 加入访问队列
+          </div>
+          <div class="flow-highlight">关键优化点：避免反复进入未成熟的好友农场</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon purple">🏠</div>
+        <div class="flow-content">
+          <div class="flow-title">4. 进入好友农场 → 执行操作</div>
+          <div class="flow-desc">对队列中的好友依次执行：帮助（浇水/除草/除虫）→ 偷菜 → 捣乱</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon green">📅</div>
+        <div class="flow-content">
+          <div class="flow-title">5. 访问后设置下次调度 <span class="flow-new">NEW</span></div>
+          <div class="flow-desc">
+            • 执行了操作 → 清除调度，下次正常巡查<br>
+            • <b>无可操作</b>且有未成熟作物 → 计算最早成熟时间，设置下次访问<br>
+            • 最长延迟 1 小时（兜底）、最短 30 秒、成熟后多等 10 秒（模拟人类反应）
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon gray">📝</div>
+        <div class="flow-content">
+          <div class="flow-title">6. 输出巡查日志</div>
+          <div class="flow-desc">汇总日志包含：实际访问人数、跳过人数、最近一位好友的成熟时间</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Demo Log Output -->
+<div class="card">
+  <div class="card-header">📄 日志示例</div>
+  <div class="card-body">
+    <div class="demo-log">
+      <div><span class="log-time">[08:12:33]</span><span class="log-tag friend">好友</span>小明: 偷2(番茄/草莓)/浇水1</div>
+      <div><span class="log-time">[08:12:34]</span><span class="log-tag friend">好友</span>阿花: 除草2/除虫1</div>
+      <div><span class="log-time">[08:12:35]</span><span class="log-tag schedule">好友</span>大壮: 作物未熟，23分15秒 后再访</div>
+      <div><span class="log-time">[08:12:35]</span><span class="log-tag schedule">好友</span>小红: 作物未熟，1小时 后再访</div>
+      <div><span class="log-time">[08:12:36]</span><span class="log-tag schedule">好友</span>老王: 作物未熟，45分30秒 后再访</div>
+      <div><span class="log-time">[08:12:36]</span><span class="log-tag friend">好友</span>巡查 5 人 → 偷2/除草2/除虫1/浇水1，跳过0人</div>
+      <div style="opacity: 0.4;">——— 10 秒后下一轮 ———</div>
+      <div><span class="log-time">[08:12:46]</span><span class="log-tag system">好友</span>本轮跳过 3 人（作物未熟），最近 大壮 约 23分5秒 后成熟</div>
+      <div style="opacity: 0.4;">——— 多轮跳过... ———</div>
+      <div><span class="log-time">[08:35:50]</span><span class="log-tag friend">好友</span>大壮: 偷1(玉米)</div>
+      <div><span class="log-time">[08:35:51]</span><span class="log-tag friend">好友</span>巡查 1 人 → 偷1，跳过2人</div>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Status Table -->
+<div class="card">
+  <div class="card-header">📅 好友调度状态示例（实时面板数据）</div>
+  <div class="card-body" style="overflow-x: auto;">
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>好友</th>
+          <th>状态</th>
+          <th>下次访问</th>
+          <th>剩余时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>大壮</b></td>
+          <td><span class="status-badge due">✓ 已到期</span></td>
+          <td>08:35:50</td>
+          <td><span style="color: #16a34a; font-weight: 600;">即将访问</span></td>
+        </tr>
+        <tr>
+          <td><b>老王</b></td>
+          <td><span class="status-badge waiting">⏳ 等待中</span></td>
+          <td>08:58:06</td>
+          <td><span class="countdown">22分16秒</span></td>
+        </tr>
+        <tr>
+          <td><b>小红</b></td>
+          <td><span class="status-badge waiting">⏳ 等待中</span></td>
+          <td>09:12:35</td>
+          <td><span class="countdown">36分45秒</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Safety -->
+<div class="card">
+  <div class="card-header">🛡️ 安全策略说明</div>
+  <div class="card-body">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div style="padding: 14px; background: #f8fafc; border-radius: 8px;">
+        <div style="font-weight: 600; margin-bottom: 6px;">🎲 随机化缓冲</div>
+        <div style="font-size: 13px; color: #64748b;">作物成熟后额外等待 10 秒再访问，避免精准定时的机器人行为特征</div>
+      </div>
+      <div style="padding: 14px; background: #f8fafc; border-radius: 8px;">
+        <div style="font-weight: 600; margin-bottom: 6px;">📏 延迟上限</div>
+        <div style="font-size: 13px; color: #64748b;">最长延迟 1 小时，即使作物需要数小时才熟，也会定期检查（防止状态过期）</div>
+      </div>
+      <div style="padding: 14px; background: #f8fafc; border-radius: 8px;">
+        <div style="font-weight: 600; margin-bottom: 6px;">🔄 优先级覆盖</div>
+        <div style="font-size: 13px; color: #64748b;">好友列表如果显示有可偷/可帮内容，立即清除调度并优先访问，不会错过机会</div>
+      </div>
+      <div style="padding: 14px; background: #f8fafc; border-radius: 8px;">
+        <div style="font-weight: 600; margin-bottom: 6px;">🔃 每日重置</div>
+        <div style="font-size: 13px; color: #64748b;">每日 0 点自动清空所有调度，确保新的一天从完整巡查开始</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

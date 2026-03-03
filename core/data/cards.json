@@ -1,0 +1,62 @@
+{
+  "cards": [
+    {
+      "id": "1",
+      "code": "BC0E74A9-6F52AD57-6964C3BF",
+      "type": "permanent",
+      "days": null,
+      "createdAt": 1772528073696,
+      "activatedAt": 1772528117685,
+      "expiresAt": null,
+      "boundAccountId": "1",
+      "boundDeviceId": null,
+      "lastBoundAccountId": "1",
+      "lastBoundAccountName": "2732444211",
+      "lastBoundAccountUin": "2732444211",
+      "claimedByUserId": "legacy-admin",
+      "claimedByUsername": "admin",
+      "status": "active",
+      "lastUsedAt": 1772528117685,
+      "remark": "免费领取"
+    },
+    {
+      "id": "2",
+      "code": "48E33BAC-FA8F6D91-7E75ADD7",
+      "type": "permanent",
+      "days": null,
+      "createdAt": 1772528693437,
+      "activatedAt": null,
+      "expiresAt": null,
+      "boundAccountId": null,
+      "boundDeviceId": null,
+      "lastBoundAccountId": null,
+      "lastBoundAccountName": null,
+      "lastBoundAccountUin": null,
+      "claimedByUserId": "1",
+      "claimedByUsername": "thy990316",
+      "status": "active",
+      "lastUsedAt": null,
+      "remark": "免费领取"
+    },
+    {
+      "id": "3",
+      "code": "9F0D1DB1-01D51281-D7A389D0",
+      "type": "permanent",
+      "days": null,
+      "createdAt": 1772528697401,
+      "activatedAt": null,
+      "expiresAt": null,
+      "boundAccountId": null,
+      "boundDeviceId": null,
+      "lastBoundAccountId": null,
+      "lastBoundAccountName": null,
+      "lastBoundAccountUin": null,
+      "claimedByUserId": "1",
+      "claimedByUsername": "thy990316",
+      "status": "active",
+      "lastUsedAt": null,
+      "remark": "免费领取"
+    }
+  ],
+  "nextId": 4
+}

@@ -1,0 +1,152 @@
+{
+  "accountConfigs": {
+    "1": {
+      "automation": {
+        "farm": true,
+        "farm_push": true,
+        "land_upgrade": true,
+        "farm_water": true,
+        "farm_weed": true,
+        "farm_bug": true,
+        "friend": true,
+        "friend_help_exp_limit": true,
+        "friend_steal": true,
+        "friend_water": true,
+        "friend_weed": true,
+        "friend_bug": true,
+        "friend_bad": false,
+        "task": true,
+        "email": true,
+        "fertilizer_gift": true,
+        "fertilizer_buy": false,
+        "farm_fertilizer_normal": true,
+        "farm_fertilizer_organic_once": true,
+        "farm_fertilizer_anti_steal": true,
+        "farm_fertilizer_anti_steal_sec": 60,
+        "farm_fertilizer_organic_loop": true,
+        "farm_fertilizer_use_gift_pack": true,
+        "free_gifts": true,
+        "share_reward": true,
+        "vip_gift": true,
+        "month_card": true,
+        "open_server_gift": true,
+        "sell": false,
+        "fertilizer": "none",
+        "fertilizer_interval_normal_ms": 3000,
+        "fertilizer_interval_organic_ms": 3000
+      },
+      "plantingStrategy": "preferred",
+      "preferredSeedId": 0,
+      "intervals": {
+        "farm": 2,
+        "friend": 10,
+        "farmMin": 2,
+        "farmMax": 2,
+        "friendMin": 10,
+        "friendMax": 10
+      },
+      "friendQuietHours": {
+        "enabled": false,
+        "start": "23:00",
+        "end": "07:00"
+      },
+      "friendBlacklist": [],
+      "farmBannedList": [],
+      "stealBlacklist": [],
+      "stealDelaySeconds": 0,
+      "friendOpOrder": [
+        "help",
+        "steal",
+        "bad"
+      ],
+      "plantOrderRandom": false,
+      "fertilizerOrderRandom": false,
+      "plantDelaySeconds": 0,
+      "ui": {
+        "colorTheme": "default",
+        "customBackgroundUrl": ""
+      }
+    }
+  },
+  "defaultAccountConfig": {
+    "automation": {
+      "farm": true,
+      "farm_push": true,
+      "land_upgrade": true,
+      "farm_water": true,
+      "farm_weed": true,
+      "farm_bug": true,
+      "friend": true,
+      "friend_help_exp_limit": true,
+      "friend_steal": true,
+      "friend_water": true,
+      "friend_weed": true,
+      "friend_bug": true,
+      "friend_bad": false,
+      "task": true,
+      "email": true,
+      "fertilizer_gift": false,
+      "fertilizer_buy": false,
+      "farm_fertilizer_normal": true,
+      "farm_fertilizer_organic_once": false,
+      "farm_fertilizer_anti_steal": false,
+      "farm_fertilizer_anti_steal_sec": 300,
+      "farm_fertilizer_organic_loop": false,
+      "farm_fertilizer_use_gift_pack": true,
+      "free_gifts": true,
+      "share_reward": true,
+      "vip_gift": true,
+      "month_card": true,
+      "open_server_gift": true,
+      "sell": false,
+      "fertilizer": "none",
+      "fertilizer_interval_normal_ms": 3000,
+      "fertilizer_interval_organic_ms": 3000
+    },
+    "plantingStrategy": "preferred",
+    "preferredSeedId": 0,
+    "intervals": {
+      "farm": 2,
+      "friend": 10,
+      "farmMin": 2,
+      "farmMax": 2,
+      "friendMin": 10,
+      "friendMax": 10
+    },
+    "friendQuietHours": {
+      "enabled": false,
+      "start": "23:00",
+      "end": "07:00"
+    },
+    "friendBlacklist": [],
+    "farmBannedList": [],
+    "stealBlacklist": [],
+    "stealDelaySeconds": 0,
+    "friendOpOrder": [
+      "help",
+      "steal",
+      "bad"
+    ],
+    "plantOrderRandom": false,
+    "fertilizerOrderRandom": false,
+    "plantDelaySeconds": 0,
+    "ui": {
+      "colorTheme": "default",
+      "customBackgroundUrl": ""
+    }
+  },
+  "ui": {
+    "theme": "dark",
+    "colorTheme": "default"
+  },
+  "offlineReminder": {
+    "channel": "webhook",
+    "reloginUrlMode": "none",
+    "endpoint": "",
+    "token": "",
+    "title": "账号下线提醒",
+    "msg": "账号下线",
+    "offlineDeleteSec": 120
+  },
+  "adminPasswordHash": ""
+}

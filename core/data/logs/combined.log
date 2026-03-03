@@ -1,0 +1,81 @@
+{"app":"qq-farm-bot","level":"info","message":"未发现账号，请访问管理面板添加账号","module":"runtime","tag":"系统","timestamp":"2026-03-03T08:53:09.905Z"}
+{"app":"qq-farm-bot","level":"info","message":"admin panel started","module":"admin","port":3000,"timestamp":"2026-03-03T08:53:09.925Z","url":"http://localhost:3000"}
+{"accountId":"1","accountName":"2732444211","app":"qq-farm-bot","level":"info","message":"正在启动账号: 2732444211","module":"runtime","tag":"系统","timestamp":"2026-03-03T08:55:17.668Z"}
+{"app":"qq-farm-bot","level":"info","message":"正在加载 Protobuf 定义...","module":"system","tag":"系统","timestamp":"2026-03-03T08:55:18.140Z"}
+{"app":"qq-farm-bot","level":"info","message":"Protobuf 定义加载完成","module":"system","tag":"系统","timestamp":"2026-03-03T08:55:18.208Z"}
+{"app":"qq-farm-bot","level":"info","message":"正在连接服务器...","module":"system","tag":"系统","timestamp":"2026-03-03T08:55:18.209Z"}
+{"app":"qq-farm-bot","level":"info","message":"登录成功: 热呛 (Lv24)","module":"system","tag":"系统","timestamp":"2026-03-03T08:55:19.998Z"}
+{"app":"qq-farm-bot","level":"info","message":"当前为 QQ 环境，跳过邀请码处理（仅微信支持）","module":"system","tag":"系统","timestamp":"2026-03-03T08:55:20.078Z"}
+{"accountId":"1","accountName":"热呛","app":"qq-farm-bot","level":"info","message":"已同步账号昵称: 2732444211 -> 热呛","module":"runtime","tag":"系统","timestamp":"2026-03-03T08:55:20.087Z"}
+{"app":"qq-farm-bot","event":"email_rewards","level":"info","message":"今日暂无可领取邮箱奖励","module":"task","result":"none","tag":"任务","timestamp":"2026-03-03T08:55:20.149Z"}
+{"app":"qq-farm-bot","event":"daily_share","level":"info","message":"今日分享奖励已领取","module":"task","result":"none","tag":"任务","timestamp":"2026-03-03T08:55:20.352Z"}
+{"app":"qq-farm-bot","event":"month_card_gift","level":"info","message":"今日暂无可领取月卡礼包","module":"task","result":"none","tag":"任务","timestamp":"2026-03-03T08:55:20.414Z"}
+{"app":"qq-farm-bot","event":"open_server_gift","level":"info","message":"今日开服红包已领取","module":"task","result":"ok","tag":"任务","timestamp":"2026-03-03T08:55:20.534Z"}
+{"app":"qq-farm-bot","event":"mall_free_gifts","level":"info","message":"本次未成功领取免费礼包","module":"task","result":"none","tag":"任务","timestamp":"2026-03-03T08:55:20.657Z"}
+{"app":"qq-farm-bot","event":"vip_daily_gift","level":"info","message":"今日暂无可领取会员礼包","module":"task","result":"none","tag":"任务","timestamp":"2026-03-03T08:55:20.732Z"}
+{"actions":["除草3","除虫1","浇水2"],"app":"qq-farm-bot","event":"farm_cycle","level":"info","message":"[草:3 虫:1 水:2 长:16] → 除草3/除虫1/浇水2","module":"farm","opType":"all","tag":"农场","timestamp":"2026-03-03T08:55:22.239Z"}
+{"app":"qq-farm-bot","event":"friend_cycle","level":"info","message":"今日帮助经验已达上限，自动停止帮忙","module":"friend","result":"ok","tag":"好友","timestamp":"2026-03-03T08:55:31.023Z"}
+{"actions":["草3","偷10(甘蔗)"],"app":"qq-farm-bot","event":"visit_friend","friendFarmLevel":51,"friendGid":1001825377,"friendName":"💋   心瘾i","level":"info","message":"💋   心瘾i(Lv.51): 草3/偷10(甘蔗)","module":"friend","result":"ok","tag":"好友","timestamp":"2026-03-03T08:55:31.183Z"}
+{"app":"qq-farm-bot","deferred":0,"event":"friend_cycle","level":"info","message":"巡查 50 人 → 偷10/除草3","module":"friend","result":"ok","summary":["偷10","除草3"],"tag":"好友","timestamp":"2026-03-03T08:55:48.836Z","visited":50}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T08:56:15.618Z","visited":48}
+{"app":"qq-farm-bot","count":9,"event":"fertilize","level":"info","message":"已为 9 块地施一次有机肥","module":"farm","result":"ok","tag":"农场","timestamp":"2026-03-03T08:56:28.860Z","type":"organic_once"}
+{"app":"qq-farm-bot","count":9,"event":"fertilize","level":"info","message":"连续有机肥完成 9 次","module":"farm","result":"ok","tag":"农场","timestamp":"2026-03-03T08:56:30.387Z","type":"organic_loop"}
+{"actions":["有机肥9"],"app":"qq-farm-bot","event":"farm_cycle","level":"info","message":"[长:16] → 有机肥9","module":"farm","opType":"all","tag":"农场","timestamp":"2026-03-03T08:56:30.387Z"}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T08:56:42.765Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T08:57:09.582Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T08:57:36.854Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T08:58:03.633Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T08:58:30.533Z","visited":48}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T08:58:57.075Z","visited":47}
+{"actions":["浇水1"],"app":"qq-farm-bot","event":"farm_cycle","level":"info","message":"[水:1 长:16] → 浇水1","module":"farm","opType":"all","tag":"农场","timestamp":"2026-03-03T08:58:58.371Z"}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T08:59:23.573Z","visited":47}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T08:59:51.141Z","visited":48}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:00:17.640Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:00:43.970Z","visited":47}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:01:10.800Z","visited":48}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:01:37.298Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:02:03.885Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:02:30.706Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:02:57.588Z","visited":47}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:03:24.563Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:03:51.641Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:04:18.605Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:04:45.545Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:05:12.438Z","visited":48}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:05:38.860Z","visited":47}
+{"actions":["除虫1"],"app":"qq-farm-bot","event":"farm_cycle","level":"info","message":"[虫:1 长:16] → 除虫1","module":"farm","opType":"all","tag":"农场","timestamp":"2026-03-03T09:05:42.671Z"}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:06:06.426Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:06:34.516Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:07:01.060Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:07:27.497Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:07:54.041Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:08:20.668Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:08:47.392Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:09:14.002Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:09:40.352Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:10:06.963Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:10:33.379Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:10:59.963Z","visited":47}
+{"actions":["除草1"],"app":"qq-farm-bot","event":"farm_cycle","level":"info","message":"[草:1 长:16] → 除草1","module":"farm","opType":"all","tag":"农场","timestamp":"2026-03-03T09:11:08.797Z"}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:11:26.909Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:11:53.431Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:12:20.223Z","visited":47}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:12:46.927Z","visited":48}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:13:13.561Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:13:39.813Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:14:06.428Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:14:33.310Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:15:00.437Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:15:27.012Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:15:53.318Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:16:19.809Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:16:46.204Z","visited":47}
+{"actions":["浇水1"],"app":"qq-farm-bot","event":"farm_cycle","level":"info","message":"[水:1 长:16] → 浇水1","module":"farm","opType":"all","tag":"农场","timestamp":"2026-03-03T09:16:47.455Z"}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:17:12.825Z","visited":47}
+{"app":"qq-farm-bot","deferred":3,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:17:39.576Z","visited":47}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:18:06.501Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:18:33.556Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:19:00.387Z","visited":48}
+{"app":"qq-farm-bot","deferred":1,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:19:27.814Z","visited":49}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:19:55.163Z","visited":48}
+{"app":"qq-farm-bot","deferred":2,"event":"friend_cycle","level":"info","message":"本轮好友巡查结束，无作物可偷取","module":"friend","result":"no_steal","tag":"好友","timestamp":"2026-03-03T09:20:22.361Z","visited":48}

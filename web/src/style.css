@@ -1,0 +1,237 @@
+/* Theme variables for consistent tech-style look（默认：翡翠森林） */
+:root {
+  --color-accent: 16 185 129; /* emerald-500 */
+  --glow-accent: 16 185 129;
+  /* 卡片与侧栏背景随主题切换 */
+  --sidebar-bg: 240 253 244;       /* green-50 翡翠森林 */
+  --sidebar-border: 220 252 231;  /* green-100 */
+  --card-bg: 240 253 244;
+  --card-border: 220 252 231;
+  --main-bg: 248 250 252;
+  --main-bg-grid: 241 245 249;
+
+  --theme-gradient-from: #10b981;
+  --theme-gradient-to: #34d399;
+  --theme-gradient: linear-gradient(135deg, var(--theme-gradient-from), var(--theme-gradient-to));
+  --theme-accent-soft: 16 185 129;
+  --theme-card-accent-border: rgba(16, 185, 129, 0.2);
+  --theme-nav-active-bg: rgba(16, 185, 129, 0.08);
+  --theme-header-gradient: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(52, 211, 153, 0.03));
+}
+
+/* 使用主题渐变的元素：切换主题时平滑过渡 */
+.theme-gradient-bg {
+  transition: background 0.25s ease, background-color 0.25s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dark {
+  --glow-accent: 16 185 129;
+  /* 默认主题深色 */
+  --sidebar-bg: 4 47 46;   /* teal-950 翡翠深色 */
+  --sidebar-border: 19 78 74;
+  --card-bg: 6 58 54;
+  --card-border: 19 78 74;
+  --main-bg: 17 24 39;
+  --main-bg-grid: 31 41 55;
+}
+
+/* ===== Color Themes ===== */
+[data-theme="ocean"] {
+  --color-accent: 59 130 246;
+  --glow-accent: 59 130 246;
+  --sidebar-bg: 239 246 255;   /* blue-50 海洋深邃 */
+  --sidebar-border: 219 234 254;
+  --card-bg: 239 246 255;
+  --card-border: 219 234 254;
+  --theme-gradient-from: #3b82f6;
+  --theme-gradient-to: #06b6d4;
+  --theme-gradient: linear-gradient(135deg, #3b82f6, #06b6d4);
+  --theme-accent-soft: 59 130 246;
+  --theme-card-accent-border: rgba(59, 130, 246, 0.2);
+  --theme-nav-active-bg: rgba(59, 130, 246, 0.08);
+  --theme-header-gradient: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(6, 182, 212, 0.03));
+}
+
+[data-theme="sunset"] {
+  --color-accent: 249 115 22;
+  --glow-accent: 249 115 22;
+  --sidebar-bg: 255 247 237;   /* orange-50 落日熔金 */
+  --sidebar-border: 254 215 170;
+  --card-bg: 255 247 237;
+  --card-border: 254 215 170;
+  --theme-gradient-from: #f97316;
+  --theme-gradient-to: #f43f5e;
+  --theme-gradient: linear-gradient(135deg, #f97316, #f43f5e);
+  --theme-accent-soft: 249 115 22;
+  --theme-card-accent-border: rgba(249, 115, 22, 0.2);
+  --theme-nav-active-bg: rgba(249, 115, 22, 0.08);
+  --theme-header-gradient: linear-gradient(135deg, rgba(249, 115, 22, 0.05), rgba(244, 63, 94, 0.03));
+}
+
+[data-theme="amethyst"] {
+  --color-accent: 139 92 246;
+  --glow-accent: 139 92 246;
+  --sidebar-bg: 245 243 255;   /* violet-50 紫晶幻梦 */
+  --sidebar-border: 221 214 254;
+  --card-bg: 245 243 255;
+  --card-border: 221 214 254;
+  --theme-gradient-from: #8b5cf6;
+  --theme-gradient-to: #a855f7;
+  --theme-gradient: linear-gradient(135deg, #8b5cf6, #a855f7);
+  --theme-accent-soft: 139 92 246;
+  --theme-card-accent-border: rgba(139, 92, 246, 0.2);
+  --theme-nav-active-bg: rgba(139, 92, 246, 0.08);
+  --theme-header-gradient: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(168, 85, 247, 0.03));
+}
+
+[data-theme="sakura"] {
+  --color-accent: 236 72 153;
+  --glow-accent: 236 72 153;
+  --sidebar-bg: 253 242 248;   /* pink-50 樱花绯色 */
+  --sidebar-border: 251 207 232;
+  --card-bg: 253 242 248;
+  --card-border: 251 207 232;
+  --theme-gradient-from: #ec4899;
+  --theme-gradient-to: #f472b6;
+  --theme-gradient: linear-gradient(135deg, #ec4899, #f472b6);
+  --theme-accent-soft: 236 72 153;
+  --theme-card-accent-border: rgba(236, 72, 153, 0.2);
+  --theme-nav-active-bg: rgba(236, 72, 153, 0.08);
+  --theme-header-gradient: linear-gradient(135deg, rgba(236, 72, 153, 0.05), rgba(244, 114, 182, 0.03));
+}
+
+/* 深色模式下的主题侧栏/卡片色（与五款主题对应） */
+.dark[data-theme="ocean"] {
+  --sidebar-bg: 12 35 64;
+  --sidebar-border: 30 58 138;
+  --card-bg: 15 43 82;
+  --card-border: 30 58 138;
+}
+.dark[data-theme="sunset"] {
+  --sidebar-bg: 69 34 38;
+  --sidebar-border: 127 29 29;
+  --card-bg: 82 40 44;
+  --card-border: 127 29 29;
+}
+.dark[data-theme="amethyst"] {
+  --sidebar-bg: 46 16 101;
+  --sidebar-border: 76 29 149;
+  --card-bg: 58 25 114;
+  --card-border: 76 29 149;
+}
+.dark[data-theme="sakura"] {
+  --sidebar-bg: 76 29 55;
+  --sidebar-border: 126 34 206;
+  --card-bg: 88 38 68;
+  --card-border: 126 34 206;
+}
+
+/* 侧栏使用主题变量，与主题切换联动 */
+.theme-sidebar-bg {
+  background-color: rgb(var(--sidebar-bg));
+  border-color: rgb(var(--sidebar-border));
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Theme-aware accent utilities */
+.theme-text-accent { color: rgb(var(--color-accent)); }
+.theme-bg-accent { background-color: rgb(var(--color-accent)); }
+.theme-bg-accent-soft { background-color: rgba(var(--color-accent), 0.1); }
+.theme-border-accent { border-color: rgba(var(--color-accent), 0.3); }
+.theme-gradient-bg { background: var(--theme-gradient); }
+
+/* Subtle grid background for main content (tech feel) */
+.layout-main-bg {
+  background-color: rgb(var(--main-bg));
+  background-image:
+    linear-gradient(rgba(var(--main-bg-grid), 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--main-bg-grid), 0.4) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dark .layout-main-bg {
+  background-image:
+    linear-gradient(rgba(var(--main-bg-grid), 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--main-bg-grid), 0.3) 1px, transparent 1px);
+}
+
+/* Unified card panel (tech-style)，背景与边框随主题切换 */
+.card-panel {
+  border-radius: 0.75rem;
+  border: 1px solid rgb(var(--card-border));
+  background-color: rgb(var(--card-bg));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.dark .card-panel {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.card-panel-header {
+  border-bottom: 1px solid rgb(var(--card-border));
+  background: var(--theme-header-gradient);
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Optional accent glow for buttons/links (tech-style) */
+.glow-accent {
+  box-shadow: 0 0 12px rgba(var(--glow-accent), 0.15);
+}
+
+.dark .glow-accent {
+  box-shadow: 0 0 12px rgba(var(--glow-accent), 0.2);
+}
+
+/* Global Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1; /* slate-300 */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8; /* slate-400 */
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #475569; /* slate-600 */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: #64748b; /* slate-500 */
+}
+
+/* Base styles to reset some defaults if needed, though UnoCSS reset handles most */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* App handles scrolling */
+}
+
+/* NProgress Customization */
+#nprogress .bar {
+  background: rgb(var(--color-accent)) !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  box-shadow:
+    0 0 10px rgb(var(--color-accent)),
+    0 0 5px rgb(var(--color-accent)) !important;
+}

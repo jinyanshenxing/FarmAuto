@@ -1,0 +1,17 @@
+{
+  "accounts": [
+    {
+      "id": "1",
+      "name": "热呛",
+      "code": "de6946c9f6727610bb0125423f35f094",
+      "platform": "qq",
+      "uin": "2732444211",
+      "qq": "2732444211",
+      "avatar": "",
+      "ownerId": "legacy-admin",
+      "createdAt": 1772528117652,
+      "updatedAt": 1772528120083
+    }
+  ],
+  "nextId": 2
+}

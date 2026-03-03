@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "thy990316",
+      "passwordHash": "2d6cc4f665d6d380d2d0288b22b23b69f3ca917070ef401a88c5afa40d8f04fb",
+      "role": "user",
+      "createdAt": 1772528683465,
+      "banned": false
+    }
+  ],
+  "nextId": 2
+}
