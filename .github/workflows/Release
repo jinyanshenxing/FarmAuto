@@ -1,0 +1,136 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact-name: qq-farm-bot-linux-x64
+            platform: linux
+          - os: windows-latest
+            artifact-name: qq-farm-bot-win-x64.exe
+            platform: windows
+          - os: macos-latest
+            artifact-name: qq-farm-bot-macos-x64
+            platform: macos
+          - os: macos-latest
+            artifact-name: qq-farm-bot-macos-arm64
+            platform: macos-arm64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.x
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build frontend
+        run: pnpm build:web
+
+      - name: Build release (Linux)
+        if: matrix.platform == 'linux'
+        run: pnpm package:release
+
+      - name: Build release (Windows)
+        if: matrix.platform == 'windows'
+        shell: powershell
+        run: pnpm package:release
+
+      - name: Build release (macOS Intel)
+        if: matrix.platform == 'macos'
+        run: pnpm package:release
+
+      - name: Build release (macOS ARM64)
+        if: matrix.platform == 'macos-arm64'
+        run: pnpm package:release
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-${{ matrix.platform }}
+          path: core/dist/${{ matrix.artifact-name }}*
+          retention-days: 30
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: build-release
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: release-linux
+          path: ./artifacts
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: release-windows
+          path: ./artifacts
+
+      - name: Download macOS Intel artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: release-macos
+          path: ./artifacts
+
+      - name: Download macOS ARM64 artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: release-macos-arm64
+          path: ./artifacts
+
+      - name: Generate checksums
+        run: |
+          cd artifacts
+          if command -v sha256sum &> /dev/null; then
+            sha256sum * > SHA256SUMS
+          elif command -v shasum &> /dev/null; then
+            shasum -a 256 * > SHA256SUMS
+          fi
+          cat SHA256SUMS
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
